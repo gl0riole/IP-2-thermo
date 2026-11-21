@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from copy import deepcopy as cp
 
 
 class ParticleClass():
@@ -10,25 +11,39 @@ class ParticleClass():
         self.R = np.array(R, dtype=float)
 
     def update_position(self, dt):
-        self.r += self.v * dt
+        self.r += self.v * dt 
+
+    @property
+    def x(self):
+        return self.r[0]
+    
+    @property
+    def y(self):
+        return self.r[1]
+
+def info_particle(glist):
+    for i, particle in enumerate(glist):
+        print(f"particle {i}: r_begin = {particle.r}, v_begin = {particle.v}")
+
+particles = [ParticleClass(m=1, v=[np.random.randint(-5, 5), 0.0], r=[np.random.randint(0, 4), 0.0], R=1) for _ in range(10)]
+particles_c = cp(particles)
+    
+info_particle(particles)
+
+for k in range(len(particles_c)):
+    particles_c[k].update_position(0.5)
 
 
-particles = []
-for i in range(10):
-    particles.append(ParticleClass(m=1, v=[np.random.randint(-5, 5), 0.0], r=[np.random.randint(0, 4), 0.0], R=1))
-
-    if len(particles) == 10:
-        print(f"the position begin: {particles[0].r}, and velocity begin: {particles[0].v}, and dt: {0.5}")
-        for k in range(len(particles) - 1):
-            particles[k].update_position(0.5)
+print("---------------------------------------")
+info_particle(particles_c)
 
 
-print(f"the position end: {particles[0].r}")
-'''
 plt.figure()
-for particle in particles:
-    plt.plot(particles[0].r, 'k.')
+plt.plot(particles[0].x, particles[0].y, 'b.')
+plt.plot(particles[1].x, particles[1].y,'r.')
+plt.plot(particles[2].x, particles[2].y,'g.')
 plt.show()
-'''
+
+
 
 
